@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>XML Sitemap Search</title>
+  <style>
+    /* Global and neuomorphic settings */
+    body {
+      background: #e0e5ec;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Neuomorphic search bar */
+    .search-container {
+      margin-bottom: 20px;
+    }
+    
+    .search-input {
+      width: calc(100% - 30px);
+      padding: 15px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      border-radius: 50px;
+      background: #e0e5ec;
+      box-shadow:  7px 7px 15px #a3b1c6,
+                   -7px -7px 15px #ffffff;
+      transition: box-shadow 0.3s ease;
+    }
+    
+    .search-input:focus {
+      box-shadow: inset 3px 3px 6px #a3b1c6,
+                  inset -3px -3px 6px #ffffff;
+    }
+
+    /* XML upload button styling */
+    .upload-container {
+      margin-bottom: 20px;
+    }
+    
+    .upload-input {
+      display: block;
+      margin-top: 5px;
+      padding: 10px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      border-radius: 5px;
+      background: #e0e5ec;
+      box-shadow:  4px 4px 8px #a3b1c6,
+                   -4px -4px 8px #ffffff;
+      cursor: pointer;
+    }
+
+    /* URL list styling */
+    .url-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .url-item {
+      flex: 1 1 calc(50% - 15px); /* Two items per row with gap */
+      background: #e0e5ec;
+      padding: 10px 15px;
+      border-radius: 10px;
+      box-shadow:  5px 5px 10px #a3b1c6,
+                   -5px -5px 10px #ffffff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .url-item a {
+      color: #333;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    
+    /* For smaller screens */
+    @media (max-width: 600px) {
+      .url-item {
+        flex: 1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- XML Upload -->
+    <div class="upload-container">
+      <label for="xmlInput">Upload your sitemap XML file:</label>
+      <input type="file" id="xmlInput" class="upload-input" accept=".xml">
+    </div>
+    
+    <!-- Search bar -->
+    <div class="search-container">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search paths (e.g., 'help', 'search-guide')">
+    </div>
+    
+    <!-- URL list -->
+    <div id="urlList" class="url-list">
+      <!-- Items will be generated after XML upload -->
+    </div>
+  </div>
+
+  <script>
+    // Get references to DOM elements
+    const xmlInput = document.getElementById("xmlInput");
+    const searchInput = document.getElementById("searchInput");
+    const urlList = document.getElementById("urlList");
+
+    // Function to extract the part of the URL after ".com"
+    function getPathFromURL(url) {
+      const splitPoint = url.indexOf('.com');
+      if (splitPoint === -1) return '';
+      return url.slice(splitPoint + 4); // +4 skips ".com"
+    }
+
+    // Function to render URL items in the list
+    function renderUrls(urlArray) {
+      // Clear any previous items
+      urlList.innerHTML = '';
+      
+      urlArray.forEach(url => {
+        // Create a container for each URL
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('url-item');
+        
+        // Create a link element
+        const link = document.createElement('a');
+        link.href = url;
+        link.textContent = url;
+        
+        itemDiv.appendChild(link);
+        urlList.appendChild(itemDiv);
+      });
+    }
+
+    // Function to parse XML and extract <loc> values
+    function parseXMLSitemap(xmlText) {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+      const locNodes = xmlDoc.getElementsByTagName("loc");
+      const urls = [];
+      for (let i = 0; i < locNodes.length; i++) {
+        urls.push(locNodes[i].textContent.trim());
+      }
+      return urls;
+    }
+
+    // Handle XML file upload
+    xmlInput.addEventListener("change", function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const xmlText = e.target.result;
+          const urls = parseXMLSitemap(xmlText);
+          renderUrls(urls);
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    // Filter URL list based on search query (search only the URL path after ".com")
+    searchInput.addEventListener("input", function() {
+      const query = searchInput.value.toLowerCase().trim();
+      const urlItems = document.querySelectorAll(".url-item");
+
+      urlItems.forEach(item => {
+        const link = item.querySelector("a");
+        const fullURL = link.textContent;
+        const path = getPathFromURL(fullURL).toLowerCase();
+        // Show if path contains the query; hide otherwise
+        if (path.indexOf(query) !== -1) {
+          item.style.display = "";
+        } else {
+          item.style.display = "none";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
