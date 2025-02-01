@@ -1,6 +1,6 @@
 # Sitemap Search Filter
 
-This website allows users to upload an XML sitemap file. It then parses the file to extract all `<loc>` URLs, and displays them in a neuomorphic, muted grey/white styled layout. A search bar is provided to filter the URLs based on the path (i.e., the portion after `.com`).
+This website allows users to upload an XML sitemap file. It then parses the file to extract all `<loc>` URLs, and displays them in a neuomorphic, muted grey/white styled layout. A search bar is provided to filter the URLs based on the path (i.e., the portion after `.com` or any other top-level domain).
 
 ## Contact
 If you enjoy this application, please consider hiring or connecting with me on [LinkedIn](https://www.linkedin.com/in/jonamichahammo) as I am #OpenToWork as of 2/1/2025!
@@ -53,3 +53,8 @@ Below is an example of what your XML sitemap file should look like. (Note: the U
 Special thanks to [Justinmind](https://www.justinmind.com/blog/author/sarah-shaar/) for this article about neumorphic design.
 
 OpenAI continues to be the performance enhancer I need.
+
+[Neumorphic Toggle Inspiration on Codepen](https://codepen.io/halvves/pen/ExjxaKj)
+
+[Neumorphic Elements Motivation on Codepen](https://codepen.io/myacode/full/PoqQQNM)
+- I would love to make my own design system in the future.

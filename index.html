@@ -15,13 +15,15 @@
       --shadow-light: #ffffff;
       --upload-bg: #d1d9e6;
       --focus-outline: 2px solid #555;
+      --search-bg-light: #f8f8f8;
+      --search-border-light: 1px solid #ccc;
     }
     
     /* CSS Variables for dark mode */
     body.dark-mode {
-      --bg-color: #1E1E1E; /* Darker background */
+      --bg-color: #1E1E1E;
       --surface-color: #32383D;
-      --text-color: #E0AB78; /* Golden color */
+      --text-color: #E0AB78;
       --shadow-dark: #1f2124;
       --shadow-light: #3b3f45;
       --upload-bg: #3b3f45;
@@ -54,12 +56,12 @@
       padding: 0 20px;
     }
     
-    /* Header with title, dark-mode toggle, and social buttons */
+    /* Header styling */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 30px;
+      margin: 30px;
     }
     
     .header-title {
@@ -73,73 +75,66 @@
       gap: 15px;
     }
     
-    /* Dark mode toggle styling with vendor prefixes */
+    /* Toggle styling */
     .toggle-label {
       cursor: pointer;
       display: inline-flex;
       align-items: center;
     }
     
+    /* Toggle track: fixed height of 64px to match social buttons; width is 128px */
     .toggle {
       position: relative;
-      height: 40px;       /* Desktop: match social buttons' height */
-      width: 80px;        /* Approximately twice as long */
-      border-radius: 20px;
+      height: 64px;
+      width: 128px;
+      border-radius: 32px;
+      background: var(--surface-color);
+      box-shadow: -8px -4px 8px 0px var(--shadow-light),
+                  8px 4px 12px 0px var(--shadow-dark);
       overflow: hidden;
-      box-shadow:
-        -8px -4px 8px 0px var(--shadow-light),
-        8px 4px 12px 0px var(--shadow-dark),
-        4px 4px 4px 0px var(--shadow-dark) inset,
-        -4px -4px 4px 0px var(--shadow-light) inset;
-      -webkit-box-shadow:
-        -8px -4px 8px 0px var(--shadow-light),
-        8px 4px 12px 0px var(--shadow-dark),
-        4px 4px 4px 0px var(--shadow-dark) inset,
-        -4px -4px 4px 0px var(--shadow-light) inset;
     }
     
     .toggle-state {
       display: none;
     }
     
+    /* Indicator: always a perfect circle matching the toggle height */
     .indicator {
-      height: 100%;
-      width: 200%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 64px;
+      height: 64px;
       background: var(--surface-color);
-      border-radius: 20px;
-      transform: translate3d(-75%, 0, 0);
-      transition: transform 0.4s cubic-bezier(0.85, 0.05, 0.18, 1.35);
-      box-shadow:
-        -8px -4px 8px 0px var(--shadow-light),
-        8px 4px 12px 0px var(--shadow-dark);
-      -webkit-box-shadow:
-        -8px -4px 8px 0px var(--shadow-light),
-        8px 4px 12px 0px var(--shadow-dark);
+      border-radius: 50%;
+      transition: left 0.4s cubic-bezier(0.85, 0.05, 0.18, 1.35);
+      box-shadow: -4px -2px 4px 0px var(--shadow-light),
+                  4px 2px 6px 0px var(--shadow-dark);
     }
     
-    /* Slide the indicator when checked */
+    /* When checked, move the indicator to the right */
     .toggle-state:checked ~ .indicator {
-      transform: translate3d(25%, 0, 0);
+      left: calc(128px - 64px); /* equals 64px */
     }
     
-    /* In dark mode, change the indicator to the golden color */
+    /* In dark mode, change indicator background to golden */
     body.dark-mode .toggle .indicator {
       background: #E0AB78;
     }
     
-    /* Social buttons */
+    /* Social buttons styling */
     .social-buttons {
       display: flex;
       gap: 10px;
     }
     
+    /* Social buttons: fixed at 64x64 */
     .social-button {
-      width: 40px;
-      height: 40px;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
       background: var(--surface-color);
       box-shadow: 7px 7px 15px var(--shadow-dark), -7px -7px 15px var(--shadow-light);
-      -webkit-box-shadow: 7px 7px 15px var(--shadow-dark), -7px -7px 15px var(--shadow-light);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -150,16 +145,15 @@
     
     .social-button:hover {
       box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
-      -webkit-box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
     }
     
     .social-button svg {
-      width: 20px;
-      height: 20px;
+      width: 32px;
+      height: 32px;
       fill: var(--text-color);
     }
     
-    /* Custom File Upload Styling */
+    /* File Upload styling */
     .upload-container {
       margin-bottom: 30px;
     }
@@ -175,7 +169,6 @@
       border-radius: 10px;
       background: var(--upload-bg);
       box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
-      -webkit-box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
       cursor: pointer;
       transition: box-shadow 0.3s ease;
       color: var(--text-color);
@@ -183,10 +176,9 @@
     
     .upload-label:hover {
       box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
-      -webkit-box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
     }
     
-    /* Neuomorphic search bar */
+    /* Search bar styling */
     .search-container {
       margin-bottom: 30px;
     }
@@ -198,12 +190,15 @@
       border-radius: 50px;
       background: var(--surface-color);
       box-shadow: 7px 7px 15px var(--shadow-dark), -7px -7px 15px var(--shadow-light);
-      -webkit-box-shadow: 7px 7px 15px var(--shadow-dark), -7px -7px 15px var(--shadow-light);
       transition: box-shadow 0.3s ease;
-      border: none;
+      border: 1px solid var(--search-border-light);
       outline: none;
       color: var(--text-color);
       font-family: inherit;
+    }
+    
+    body:not(.dark-mode) .search-input {
+      background: var(--search-bg-light);
     }
     
     .search-input::placeholder {
@@ -213,7 +208,6 @@
     
     .search-input:focus {
       box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
-      -webkit-box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
     }
     
     /* URL list styling */
@@ -229,14 +223,17 @@
       padding: 15px 20px;
       border-radius: 10px;
       box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
-      -webkit-box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
-      overflow: hidden;
-      text-overflow: ellipsis;
+      overflow-x: auto;
       white-space: nowrap;
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;     /* Firefox */
       transition: background-color 0.2s, box-shadow 0.3s ease;
     }
     
-    /* Hover effect on the entire URL item */
+    .url-item::-webkit-scrollbar {
+      display: none;
+    }
+    
     .url-item:hover {
       background-color: rgba(200, 200, 200, 0.5);
     }
@@ -249,9 +246,9 @@
       color: var(--text-color);
       text-decoration: none;
       font-size: 16px;
-      width: 100%;
       display: block;
       padding: 8px 0;
+      width: 100%;
     }
     
     /* Mobile adjustments */
@@ -265,22 +262,29 @@
       }
       header .header-title {
         font-size: 32px;
+        margin-left: 0;
       }
+      /* Mobile social buttons remain 64x64 with 32px icons */
       .social-button {
-        width: 60px;
-        height: 60px;
+        width: 64px;
+        height: 64px;
       }
       .social-button svg {
-        width: 30px;
-        height: 30px;
+        width: 32px;
+        height: 32px;
       }
+      /* Mobile toggle: 64px tall and 128px wide */
       .toggle {
-        height: 60px;
-        width: 120px;
-        border-radius: 30px;
+        height: 64px;
+        width: 128px;
+        border-radius: 32px;
       }
       .indicator {
-        border-radius: 30px;
+        width: 64px;
+        height: 64px;
+      }
+      .toggle-state:checked ~ .indicator {
+        left: calc(128px - 64px); /* 64px */
       }
       .upload-label {
         font-size: 18px;
@@ -301,7 +305,7 @@
   <header>
     <div class="header-title">Sitemap Search</div>
     <div class="header-controls">
-      <!-- Dark mode toggle wrapped in a label, with role="switch" and aria attributes -->
+      <!-- Dark mode toggle with ARIA attributes -->
       <label class="toggle-label" for="darkToggle">
         <div class="toggle">
           <input class="toggle-state" type="checkbox" name="darkMode" id="darkToggle" role="switch" aria-checked="false" />
@@ -311,13 +315,11 @@
       <!-- Social buttons -->
       <div class="social-buttons">
         <a href="https://www.linkedin.com/in/jonamichahammo" target="_blank" class="social-button" aria-label="LinkedIn">
-          <!-- LinkedIn SVG Icon -->
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.23 0H1.77C.79 0 0 .78 0 1.75v20.5C0 23.22.79 24 1.77 24h20.46c.98 0 1.77-.78 1.77-1.75V1.75C24 .78 23.21 0 22.23 0zM7.12 20.45H3.56V9h3.56v11.45zM5.34 7.56a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zm15.11 12.89h-3.56v-5.55c0-1.32-.03-3.02-1.85-3.02-1.85 0-2.14 1.44-2.14 2.93v5.64H9.34V9h3.42v1.56h.05c.48-.91 1.65-1.85 3.4-1.85 3.64 0 4.32 2.39 4.32 5.5v6.25z"/>
           </svg>
         </a>
         <a href="https://github.com/pythonidaer" target="_blank" class="social-button" aria-label="GitHub">
-          <!-- GitHub SVG Icon -->
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 0C5.37 0 0 5.37 0 12a12 12 0 008.21 11.38c.6.11.82-.26.82-.58 0-.29-.01-1.06-.01-2.08-3.34.73-4.04-1.61-4.04-1.61-.55-1.4-1.34-1.77-1.34-1.77-1.09-.75.08-.73.08-.73 1.2.09 1.83 1.23 1.83 1.23 1.07 1.83 2.8 1.3 3.48 1 .11-.78.42-1.3.76-1.6-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.23-3.23-.12-.3-.54-1.52.12-3.16 0 0 1-.32 3.3 1.23a11.5 11.5 0 013-.4 11.5 11.5 0 013 .4c2.3-1.55 3.3-1.23 3.3-1.23.66 1.64.24 2.86.12 3.16.76.85 1.23 1.92 1.23 3.23 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22 0 1.6-.01 2.88-.01 3.27 0 .32.22.7.83.58A12 12 0 0024 12c0-6.63-5.37-12-12-12z"/>
           </svg>
@@ -344,7 +346,7 @@
       </div>
     </div>
   </main>
-
+  
   <script>
     // Toggle dark mode based on checkbox state
     const darkToggle = document.getElementById("darkToggle");
@@ -352,12 +354,12 @@
       document.body.classList.toggle("dark-mode", darkToggle.checked);
       darkToggle.setAttribute("aria-checked", darkToggle.checked);
     });
-
+  
     // Get references to DOM elements
     const xmlInput = document.getElementById("xmlInput");
     const searchInput = document.getElementById("searchInput");
     const urlList = document.getElementById("urlList");
-
+  
     // Extract pathname from any URL using the URL constructor
     function getPathFromURL(url) {
       try {
@@ -367,7 +369,7 @@
         return '';
       }
     }
-
+  
     // Render URL items into the list
     function renderUrls(urlArray) {
       urlList.innerHTML = '';
@@ -382,7 +384,7 @@
         urlList.appendChild(itemDiv);
       });
     }
-
+  
     // Parse the uploaded XML sitemap and extract <loc> values
     function parseXMLSitemap(xmlText) {
       const parser = new DOMParser();
@@ -394,7 +396,7 @@
       }
       return urls;
     }
-
+  
     // Handle XML file upload
     xmlInput.addEventListener("change", function(event) {
       const file = event.target.files[0];
@@ -408,7 +410,7 @@
         reader.readAsText(file);
       }
     });
-
+  
     // Filter URL list based on search query (matching against the URL pathname)
     searchInput.addEventListener("input", function() {
       const query = searchInput.value.toLowerCase().trim();
