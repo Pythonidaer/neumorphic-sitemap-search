@@ -82,9 +82,9 @@
     
     .toggle {
       position: relative;
-      height: 40px;       /* Desktop: match social buttons' height */
-      width: 80px;        /* Approximately twice as long */
-      border-radius: 20px;
+      height: 50px;       /* Desktop: 50px high */
+      width: 100px;       /* Desktop: 100px wide */
+      border-radius: 25px; /* Pill shape */
       overflow: hidden;
       box-shadow:
         -8px -4px 8px 0px var(--shadow-light),
@@ -104,9 +104,9 @@
     
     .indicator {
       height: 100%;
-      width: 200%;
+      width: 200%; /* 200px by default */
       background: var(--surface-color);
-      border-radius: 20px;
+      border-radius: inherit; /* Inherit parent's border-radius */
       transform: translate3d(-75%, 0, 0);
       transition: transform 0.4s cubic-bezier(0.85, 0.05, 0.18, 1.35);
       box-shadow:
@@ -134,8 +134,8 @@
     }
     
     .social-button {
-      width: 40px;
-      height: 40px;
+      width: 64px;       /* Updated to 64px */
+      height: 64px;
       border-radius: 50%;
       background: var(--surface-color);
       box-shadow: 7px 7px 15px var(--shadow-dark), -7px -7px 15px var(--shadow-light);
@@ -154,8 +154,8 @@
     }
     
     .social-button svg {
-      width: 20px;
-      height: 20px;
+      width: 32px;  /* Updated to 32px */
+      height: 32px;
       fill: var(--text-color);
     }
     
@@ -230,9 +230,8 @@
       border-radius: 10px;
       box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
       -webkit-box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      overflow-x: auto;  /* Allow horizontal scrolling for long content */
+      white-space: nowrap; /* Prevent wrapping so scroll is needed */
       transition: background-color 0.2s, box-shadow 0.3s ease;
     }
     
@@ -249,8 +248,7 @@
       color: var(--text-color);
       text-decoration: none;
       font-size: 16px;
-      width: 100%;
-      display: block;
+      display: inline-block;
       padding: 8px 0;
     }
     
@@ -265,22 +263,24 @@
       }
       header .header-title {
         font-size: 32px;
+        /* Flush with left side on mobile */
+        margin-left: 0;
       }
       .social-button {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
       }
       .social-button svg {
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
       }
       .toggle {
-        height: 60px;
-        width: 120px;
-        border-radius: 30px;
+        height: 70px;
+        width: 140px;
+        border-radius: 35px;
       }
       .indicator {
-        border-radius: 30px;
+        border-radius: inherit;
       }
       .upload-label {
         font-size: 18px;
@@ -301,7 +301,7 @@
   <header>
     <div class="header-title">Sitemap Search</div>
     <div class="header-controls">
-      <!-- Dark mode toggle wrapped in a label, with role="switch" and aria attributes -->
+      <!-- Dark mode toggle wrapped in a label with ARIA attributes -->
       <label class="toggle-label" for="darkToggle">
         <div class="toggle">
           <input class="toggle-state" type="checkbox" name="darkMode" id="darkToggle" role="switch" aria-checked="false" />
@@ -323,103 +323,102 @@
           </svg>
         </a>
       </div>
-    </div>
-  </header>
-  <main>
-    <div class="container">
-      <!-- XML Upload -->
-      <div class="upload-container">
-        <label for="xmlInput" class="upload-label">Upload your sitemap XML file</label>
-        <input type="file" id="xmlInput" class="upload-input" accept=".xml">
+    </header>
+    <main>
+      <div class="container">
+        <!-- XML Upload -->
+        <div class="upload-container">
+          <label for="xmlInput" class="upload-label">Upload your sitemap XML file</label>
+          <input type="file" id="xmlInput" class="upload-input" accept=".xml">
+        </div>
+        
+        <!-- Search bar -->
+        <div class="search-container">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search paths (e.g., 'help', 'search-guide')" aria-label="Search sitemap URLs">
+        </div>
+        
+        <!-- URL list -->
+        <div id="urlList" class="url-list">
+          <!-- Items will be generated after XML upload -->
+        </div>
       </div>
-      
-      <!-- Search bar -->
-      <div class="search-container">
-        <input type="text" id="searchInput" class="search-input" placeholder="Search paths (e.g., 'help', 'search-guide')" aria-label="Search sitemap URLs">
-      </div>
-      
-      <!-- URL list -->
-      <div id="urlList" class="url-list">
-        <!-- Items will be generated after XML upload -->
-      </div>
-    </div>
-  </main>
-
-  <script>
-    // Toggle dark mode based on checkbox state
-    const darkToggle = document.getElementById("darkToggle");
-    darkToggle.addEventListener("change", () => {
-      document.body.classList.toggle("dark-mode", darkToggle.checked);
-      darkToggle.setAttribute("aria-checked", darkToggle.checked);
-    });
-
-    // Get references to DOM elements
-    const xmlInput = document.getElementById("xmlInput");
-    const searchInput = document.getElementById("searchInput");
-    const urlList = document.getElementById("urlList");
-
-    // Extract pathname from any URL using the URL constructor
-    function getPathFromURL(url) {
-      try {
-        const urlObj = new URL(url);
-        return urlObj.pathname;
-      } catch (error) {
-        return '';
-      }
-    }
-
-    // Render URL items into the list
-    function renderUrls(urlArray) {
-      urlList.innerHTML = '';
-      urlArray.forEach(url => {
-        const itemDiv = document.createElement('div');
-        itemDiv.classList.add('url-item');
-        const link = document.createElement('a');
-        link.href = url;
-        link.textContent = url;
-        link.target = "_blank";
-        itemDiv.appendChild(link);
-        urlList.appendChild(itemDiv);
+    </main>
+  
+    <script>
+      // Toggle dark mode based on checkbox state
+      const darkToggle = document.getElementById("darkToggle");
+      darkToggle.addEventListener("change", () => {
+        document.body.classList.toggle("dark-mode", darkToggle.checked);
+        darkToggle.setAttribute("aria-checked", darkToggle.checked);
       });
-    }
-
-    // Parse the uploaded XML sitemap and extract <loc> values
-    function parseXMLSitemap(xmlText) {
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(xmlText, "application/xml");
-      const locNodes = xmlDoc.getElementsByTagName("loc");
-      const urls = [];
-      for (let i = 0; i < locNodes.length; i++) {
-        urls.push(locNodes[i].textContent.trim());
+  
+      // Get references to DOM elements
+      const xmlInput = document.getElementById("xmlInput");
+      const searchInput = document.getElementById("searchInput");
+      const urlList = document.getElementById("urlList");
+  
+      // Extract pathname from any URL using the URL constructor
+      function getPathFromURL(url) {
+        try {
+          const urlObj = new URL(url);
+          return urlObj.pathname;
+        } catch (error) {
+          return '';
+        }
       }
-      return urls;
-    }
-
-    // Handle XML file upload
-    xmlInput.addEventListener("change", function(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const xmlText = e.target.result;
-          const urls = parseXMLSitemap(xmlText);
-          renderUrls(urls);
-        };
-        reader.readAsText(file);
+  
+      // Render URL items into the list
+      function renderUrls(urlArray) {
+        urlList.innerHTML = '';
+        urlArray.forEach(url => {
+          const itemDiv = document.createElement('div');
+          itemDiv.classList.add('url-item');
+          const link = document.createElement('a');
+          link.href = url;
+          link.textContent = url;
+          link.target = "_blank";
+          itemDiv.appendChild(link);
+          urlList.appendChild(itemDiv);
+        });
       }
-    });
-
-    // Filter URL list based on search query (matching against the URL pathname)
-    searchInput.addEventListener("input", function() {
-      const query = searchInput.value.toLowerCase().trim();
-      const urlItems = document.querySelectorAll(".url-item");
-      urlItems.forEach(item => {
-        const link = item.querySelector("a");
-        const fullURL = link.textContent;
-        const path = getPathFromURL(fullURL).toLowerCase();
-        item.style.display = path.indexOf(query) !== -1 ? "" : "none";
+  
+      // Parse the uploaded XML sitemap and extract <loc> values
+      function parseXMLSitemap(xmlText) {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+        const locNodes = xmlDoc.getElementsByTagName("loc");
+        const urls = [];
+        for (let i = 0; i < locNodes.length; i++) {
+          urls.push(locNodes[i].textContent.trim());
+        }
+        return urls;
+      }
+  
+      // Handle XML file upload
+      xmlInput.addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const xmlText = e.target.result;
+            const urls = parseXMLSitemap(xmlText);
+            renderUrls(urls);
+          };
+          reader.readAsText(file);
+        }
       });
-    });
-  </script>
-</body>
+  
+      // Filter URL list based on search query (matching against the URL pathname)
+      searchInput.addEventListener("input", function() {
+        const query = searchInput.value.toLowerCase().trim();
+        const urlItems = document.querySelectorAll(".url-item");
+        urlItems.forEach(item => {
+          const link = item.querySelector("a");
+          const fullURL = link.textContent;
+          const path = getPathFromURL(fullURL).toLowerCase();
+          item.style.display = path.indexOf(query) !== -1 ? "" : "none";
+        });
+      });
+    </script>
+  </body>
 </html>
