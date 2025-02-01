@@ -73,7 +73,7 @@
       gap: 15px;
     }
     
-    /* Dark mode toggle styling with ARIA role and label */
+    /* Dark mode toggle styling with vendor prefixes */
     .toggle-label {
       cursor: pointer;
       display: inline-flex;
@@ -82,11 +82,16 @@
     
     .toggle {
       position: relative;
-      height: 40px;       /* Match social buttons' height */
+      height: 40px;       /* Desktop: match social buttons' height */
       width: 80px;        /* Approximately twice as long */
       border-radius: 20px;
       overflow: hidden;
       box-shadow:
+        -8px -4px 8px 0px var(--shadow-light),
+        8px 4px 12px 0px var(--shadow-dark),
+        4px 4px 4px 0px var(--shadow-dark) inset,
+        -4px -4px 4px 0px var(--shadow-light) inset;
+      -webkit-box-shadow:
         -8px -4px 8px 0px var(--shadow-light),
         8px 4px 12px 0px var(--shadow-dark),
         4px 4px 4px 0px var(--shadow-dark) inset,
@@ -107,9 +112,12 @@
       box-shadow:
         -8px -4px 8px 0px var(--shadow-light),
         8px 4px 12px 0px var(--shadow-dark);
+      -webkit-box-shadow:
+        -8px -4px 8px 0px var(--shadow-light),
+        8px 4px 12px 0px var(--shadow-dark);
     }
     
-    /* Slide the indicator when the toggle is checked */
+    /* Slide the indicator when checked */
     .toggle-state:checked ~ .indicator {
       transform: translate3d(25%, 0, 0);
     }
@@ -131,6 +139,7 @@
       border-radius: 50%;
       background: var(--surface-color);
       box-shadow: 7px 7px 15px var(--shadow-dark), -7px -7px 15px var(--shadow-light);
+      -webkit-box-shadow: 7px 7px 15px var(--shadow-dark), -7px -7px 15px var(--shadow-light);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -141,6 +150,7 @@
     
     .social-button:hover {
       box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+      -webkit-box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
     }
     
     .social-button svg {
@@ -154,12 +164,10 @@
       margin-bottom: 30px;
     }
     
-    /* Hide native file input, but keep it accessible via its label */
     .upload-input {
       display: none;
     }
     
-    /* Style the label to look like a button */
     .upload-label {
       display: inline-block;
       padding: 15px 20px;
@@ -167,6 +175,7 @@
       border-radius: 10px;
       background: var(--upload-bg);
       box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+      -webkit-box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
       cursor: pointer;
       transition: box-shadow 0.3s ease;
       color: var(--text-color);
@@ -174,6 +183,7 @@
     
     .upload-label:hover {
       box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+      -webkit-box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
     }
     
     /* Neuomorphic search bar */
@@ -181,14 +191,14 @@
       margin-bottom: 30px;
     }
     
-    /* Provide a visible label for screen readers using aria-label or a <label> element */
     .search-input {
-      width: calc(100% - 40px); /* Match the width of the URL items */
+      width: calc(100% - 40px);
       padding: 20px;
       font-size: 18px;
       border-radius: 50px;
       background: var(--surface-color);
       box-shadow: 7px 7px 15px var(--shadow-dark), -7px -7px 15px var(--shadow-light);
+      -webkit-box-shadow: 7px 7px 15px var(--shadow-dark), -7px -7px 15px var(--shadow-light);
       transition: box-shadow 0.3s ease;
       border: none;
       outline: none;
@@ -203,6 +213,7 @@
     
     .search-input:focus {
       box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+      -webkit-box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
     }
     
     /* URL list styling */
@@ -218,18 +229,18 @@
       padding: 15px 20px;
       border-radius: 10px;
       box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+      -webkit-box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
       transition: background-color 0.2s, box-shadow 0.3s ease;
     }
     
-    /* Hover effect on the entire URL item in light mode */
+    /* Hover effect on the entire URL item */
     .url-item:hover {
       background-color: rgba(200, 200, 200, 0.5);
     }
     
-    /* Adjust the hover background in dark mode */
     body.dark-mode .url-item:hover {
       background-color: rgba(224, 171, 120, 0.2);
     }
@@ -243,10 +254,45 @@
       padding: 8px 0;
     }
     
-    /* Adjust mobile sizes */
+    /* Mobile adjustments */
     @media (max-width: 600px) {
+      body {
+        font-size: 18px;
+      }
+      .container {
+        margin: 40px auto 20px;
+        padding: 0 10px;
+      }
+      header .header-title {
+        font-size: 32px;
+      }
+      .social-button {
+        width: 60px;
+        height: 60px;
+      }
+      .social-button svg {
+        width: 30px;
+        height: 30px;
+      }
+      .toggle {
+        height: 60px;
+        width: 120px;
+        border-radius: 30px;
+      }
+      .indicator {
+        border-radius: 30px;
+      }
+      .upload-label {
+        font-size: 18px;
+        padding: 20px 25px;
+      }
+      .search-input {
+        font-size: 20px;
+        padding: 25px;
+      }
       .url-item {
-        flex: 1 1 100%;
+        padding: 20px 25px;
+        font-size: 18px;
       }
     }
   </style>
@@ -255,9 +301,8 @@
   <header>
     <div class="header-title">Sitemap Search</div>
     <div class="header-controls">
-      <!-- Dark mode toggle wrapped in a label -->
+      <!-- Dark mode toggle wrapped in a label, with role="switch" and aria attributes -->
       <label class="toggle-label" for="darkToggle">
-        <!-- Using role="switch" and aria-checked on the hidden input -->
         <div class="toggle">
           <input class="toggle-state" type="checkbox" name="darkMode" id="darkToggle" role="switch" aria-checked="false" />
           <div class="indicator"></div>
@@ -290,7 +335,6 @@
       
       <!-- Search bar -->
       <div class="search-container">
-        <!-- Adding an aria-label to the search input -->
         <input type="text" id="searchInput" class="search-input" placeholder="Search paths (e.g., 'help', 'search-guide')" aria-label="Search sitemap URLs">
       </div>
       
@@ -306,7 +350,6 @@
     const darkToggle = document.getElementById("darkToggle");
     darkToggle.addEventListener("change", () => {
       document.body.classList.toggle("dark-mode", darkToggle.checked);
-      // Update aria-checked on the switch
       darkToggle.setAttribute("aria-checked", darkToggle.checked);
     });
 
